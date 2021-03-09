@@ -1,0 +1,3 @@
+# Project exclude paths
+/shop-generator/target/
+/shop-manager/target/
