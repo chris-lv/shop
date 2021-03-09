@@ -5,7 +5,9 @@ import com.chris.manager.service.GoodsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -44,6 +46,17 @@ public class GoodsCategoryController {
         List<GoodsCategory> gcList = goodsCategoryService.selectCategoryTopList();
         model.addAttribute("gcList",gcList);
         return "goods/category/category-add";
+    }
+
+    /**
+     * 商品分类-新增分类-级联查询
+     * @param parentId
+     * @return
+     */
+    @RequestMapping("category/{parentId}")
+    @ResponseBody
+    public List<GoodsCategory> selectCategoryList(@PathVariable Short parentId) {
+        return goodsCategoryService.selectCategoryByParentId(parentId);
     }
 
 }

@@ -20,4 +20,11 @@ public interface GoodsCategoryService {
      * @return
      */
     List<GoodsCategory> selectCategoryTopList();
+
+    /**
+     * 商品分类-新增分类-级联查询
+     * @param parentId
+     * @return
+     */
+    List<GoodsCategory> selectCategoryByParentId(Short parentId);
 }

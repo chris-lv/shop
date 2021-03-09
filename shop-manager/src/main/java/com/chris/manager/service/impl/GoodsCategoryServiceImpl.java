@@ -32,4 +32,13 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
         example.createCriteria().andParentIdEqualTo((short)0);
         return goodsCategoryMapper.selectByExample(example);
     }
+
+    @Override
+    public List<GoodsCategory> selectCategoryByParentId(Short parentId) {
+        //创建查询条件
+        GoodsCategoryExample example = new GoodsCategoryExample();
+        //设置查询条件
+        example.createCriteria().andParentIdEqualTo(parentId);
+        return goodsCategoryMapper.selectByExample(example);
+    }
 }
