@@ -124,12 +124,15 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2">手机分类名称</label>
                                     <div class="col-sm-6">
-                                        <input type="text" placeholder="手机分类名称" class="form-control large" name="mobile_name" value="数码产品">
+                                        <input type="text" placeholder="手机分类名称" class="form-control large" name="mobileName" value="数码产品">
                                         <span class="help-inline" style="color:#F00; display:none;" id="err_mobile_name"></span>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <label0 class="control-label col-sm-2">上级分类</label0>
+
+                                    <input type="text" name="parentId" id="parentId" value="0">
+                                    <input type="text" name="level" id="level" value="1">
 
                                     <div class="col-sm-3">
                                         <select name="parent_id_1" id="parent_id_1" onchange="getCategory(this.value,'parent_id_2','0');" class="small form-control">
@@ -140,7 +143,7 @@
 										</select>
                                     </div>                                    
                                     <div class="col-sm-3">
-                                      <select name="parent_id_2" id="parent_id_2"  class="small form-control">
+                                      <select name="parent_id_2" id="parent_id_2"  class="small form-control" onchange="setParentId(this.value,'3')">
                                         <option value="0">请选择商品分类</option>
                                       </select>  
                                     </div>                                      
@@ -150,7 +153,7 @@
 									
                                     <div class="col-sm-10">
                                         <label> 
-                                            <input checked="checked" type="radio" name="is_show" value="1"> 是
+                                            <input checked="checked" type="radio" name="isShow" value="1"> 是
                                                 <input type="radio" name="is_show" value="0"> 否
                                                                                                                                                                                 
                                         </label>
@@ -160,7 +163,7 @@
                                     <label class="control-label col-sm-2">分类分组:</label>
 									
                                     <div class="col-sm-1">
-                                      <select name="cat_group" id="cat_group" class="form-control">
+                                      <select name="catGroup" id="cat_group" class="form-control">
                                         <option value="0">0</option>                                        
                                         <option value='1' >1</option>"
                                         <option value='2' >2</option>"
@@ -197,14 +200,14 @@
                                <div class="form-group">
                                     <label class="control-label col-sm-2">显示排序</label>
                                     <div class="col-sm-1">
-                                        <input type="text" placeholder="50" class="form-control large" name="sort_order" value="50"/>
+                                        <input type="text" placeholder="50" class="form-control large" name="sortOrder" value="50"/>
                                         <span class="help-inline" style="color:#F00; display:none;" id="err_sort_order"></span>
                                     </div>
                                 </div>
 								<div class="form-group">
                                     <label class="control-label col-sm-2">分佣比例</label>
                                     <div class="col-sm-1">
-                                        <input type="text" placeholder="50" class="form-control large" name="commission_rate" id="commission_rate" value="0" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+                                        <input type="text" placeholder="50" class="form-control large" name="commissionRate" id="commission_rate" value="0" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
                                     </div>
                                     <div class="col-sm-1" style="margin-top: 6px;margin-left: -20px;">
                                         <span>%</span> 
@@ -214,7 +217,7 @@
                         <div class="box-footer">                        	
                             <input type="hidden" name="id" value="1">                           
                         	<button type="reset" class="btn btn-primary pull-left"><i class="icon-ok"></i>重填  </button>                       	                 
-                            <button type="button" onclick="ajax_submit_form('category_form','/index/Admin/Goods/addEditCategory/is_ajax/1');" class="btn btn-primary pull-right"><i class="icon-ok"></i>提交  </button>
+                            <button type="button" onclick="ajaxSubmitForm()" class="btn btn-primary pull-right"><i class="icon-ok"></i>提交  </button>
                         </div> 
                         <input type="hidden" name="__hash__" value="5ab856735c6bdf6e6c05512f732b7cb9_c69aca1884010e29fc472c9ece13ff67" /></form>
                     </div>
@@ -233,38 +236,84 @@ $(document).ready(function(){
 </script>
 
 <script>
-      /**
-       * 获取多级联动的商品分类
-       * id:当前选择框的值
-       * next：下级选择框显示的内容
-       * select_id:
-       */
-      function getCategory(id, next, select_id) {
-          var url = '${ctx}/goods/category/' + id;
-// 用户重新选择顶级分类时，重置下级分类为：请选择商品分类，且清空下级分类信息
-          var htmlStr = "<option value='0'>请选择商品分类</option>";
-          if (0 == id) {
-              $("#" + next).html(htmlStr);
-              return;
-          }
-          $.ajax({
-              type: "GET",
-              url: url,
-              error: function (request) {
-                  layer.alert("获取子分类失败！");
-              },
-              success: function (result) {
-                  if (result.length > 0) {
-                      for (i = 0; i < result.length; i++) {
-                          htmlStr += "<option value='" + result[i].id + "'>" + result[i].name + "</option>"
-                      }
-                      $("#" + next).html(htmlStr);
-                  } else {
-                      layer.alert("获取子分类失败！");
-                  }
-              }
-          });
-      }
+    /**
+     * 获取多级联动的商品分类
+     * id:当前选择框的值
+     * next：下级选择框显示的内容
+     * select_id:level
+     */
+    function getCategory(id, next, select_id) {
+        var url = '${ctx}/goods/category/' + id;
+        // 用户重新选择顶级分类时，重置下级分类为：请选择商品分类，且清空下级分类信息
+        var htmlStr = "<option value='0'>请选择商品分类</option>";
+        //修改parentId
+        $("#parentId").val(id);
+        if (0 == id) {
+            $("#" + next).html(htmlStr);
+            //修改level
+            $("#level").val(1);
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            url: url,
+            error: function (request) {
+                layer.alert("获取子分类失败！");
+            },
+            success: function (result) {
+                if (result.length > 0) {
+                    for (i = 0; i < result.length; i++) {
+                        htmlStr += "<option value='" + result[i].id + "'>" + result[i].name + "</option>"
+                    }
+                    $("#" + next).html(htmlStr);
+                    $("#level").val(2);
+                } else {
+                    layer.alert("获取子分类失败！");
+                }
+            }
+        });
+    }
+    /**
+     *保存分类
+     */
+    function ajaxSubmitForm() {
+        $.ajax({
+            url: "${ctx}/goods/category/save",
+            type: "post",
+            data: $("#category_form").serialize(),
+            dataType:"JSON",
+            success:function (result) {
+                if (result.code==200){
+                    layer.confirm("保存成功",{btn:['继续新增','返回列表']},
+                        function () {
+                            window.location.href="${ctx}/goods/category/add";
+                        },function () {
+                            window.location.href="${ctx}/goods/category/list";
+                        });
+                }else {
+                    layer.alert("保存失败");
+                }
+            },
+            error:function () {
+                layer.alert("保存失败");
+            }
+        });
+    }
+    /**
+     * 设置parentId和level
+     */
+    function setParentId(parentId,level) {
+        // 修改parentId和level
+        if (0==parentId){
+            $("#parentId").val($("#parent_id_1").val);
+            $("#level").val(2);
+            return;
+        }
+        // 修改parentId和level
+        $("#parentId").val(parentId);
+        $("#level").val(level);
+    }
+
 </script>
    
 </body>

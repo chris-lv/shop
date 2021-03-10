@@ -131,80 +131,90 @@
                            <th valign="middle">手机显示名称</th>
                            <th valign="middle">是否推荐</th>
 		                   <th valign="middle">是否显示</th>
-                                   <th valign="middle">分组</th>
+                           <th valign="middle">分组</th>
 		                   <th valign="middle">排序</th>
 		                   <th valign="middle">操作</th>
 	                   </tr>
 	                 </thead>
 			<tbody>
-			<tr role="row" align="center" class="1" id="1_1" >
-			  			 <td>1</td>
-	                     <td align="left" style="padding-left:5em"> 
-	                      <span class="glyphicon glyphicon-plus btn-warning" style="padding:2px; font-size:12px;"  id="icon_1_1" aria-hidden="false" onclick="rowClicked(this)" ></span>&nbsp;                             <span>手机 、 数码 、 通信</span>
-			     		 </td>
-                         <td><span>数码产品</span></td>
-                         <td>
-                             <img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','1','is_hot',this)"/>
-                         </td>
-	                 <td>
-                             <img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','1','is_show',this)"/>                             
-                         </td>
-	                     <td>                                 
-                         	<input type="text" onchange="updateSort('goods_category','id','1','cat_group',this)"  onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')"  size="4"value="0" class="input-sm" />
-                            </td>                         
-	                     <td>
-                         	<input type="text" onchange="updateSort('goods_category','id','1','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="50" class="input-sm" />
-                             </td>
-	                     <td>
-	                      <a class="btn btn-primary" href="商品分类-编辑.html"><i class="fa fa-pencil"></i></a>
-	                      <a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/1');"><i class="fa fa-trash-o"></i></a>
-			     		</td>
-	                   </tr><tr role="row" align="center" class="2" id="2_12" style="display:none">
-			  			 <td>12</td>
-	                     <td align="left" style="padding-left:10em"> 
-	                      <span class="glyphicon glyphicon-plus btn-warning" style="padding:2px; font-size:12px;"  id="icon_2_12" aria-hidden="false" onclick="rowClicked(this)" ></span>&nbsp;                             <span>手机配件</span>
-			     		 </td>
-                         <td><span>手机配件</span></td>
-                         <td>
-                             <img width="20" height="20" src="${ctx}/images/cancel.png" onclick="changeTableVal('goods_category','id','12','is_hot',this)"/>
-                         </td>
-	                 <td>
-                             <img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','12','is_show',this)"/>                             
-                         </td>
-	                     <td>                                 
-                         	<input type="text" onchange="updateSort('goods_category','id','12','cat_group',this)"  onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')"  size="4"value="0" class="input-sm" />
-                            </td>                         
-	                     <td>
-                         	<input type="text" onchange="updateSort('goods_category','id','12','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="50" class="input-sm" />
-                             </td>
-	                     <td>
-	                      <a class="btn btn-primary" href="/index/Admin/Goods/addEditCategory/id/12"><i class="fa fa-pencil"></i></a>
-	                      <a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/12');"><i class="fa fa-trash-o"></i></a>
-			     		</td>
-	                   </tr><tr role="row" align="center" class="3" id="3_100" style="display:none">
-			  			 <td>100</td>
-	                     <td align="left" style="padding-left:15em"> 
-	                                                   <span>电池 电源 充电器</span>
-			     		 </td>
-                         <td><span>电池 电源 充电器</span></td>
-                         <td>
-                             <img width="20" height="20" src="${ctx}/images/cancel.png" onclick="changeTableVal('goods_category','id','100','is_hot',this)"/>
-                         </td>
-	                 <td>
-                             <img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','100','is_show',this)"/>                             
-                         </td>
-	                     <td>                                 
-                         	<input type="text" onchange="updateSort('goods_category','id','100','cat_group',this)"  onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')"  size="4"value="0" class="input-sm" />
-                            </td>                         
-	                     <td>
-                         	<input type="text" onchange="updateSort('goods_category','id','100','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="50" class="input-sm" />
-                             </td>
-	                     <td>
-	                      <a class="btn btn-primary" href="/index/Admin/Goods/addEditCategory/id/100"><i class="fa fa-pencil"></i></a>
-	                      <a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/100');"><i class="fa fa-trash-o"></i></a>
-			     		</td>
-	                   </tr>
-	                   </tbody>
+			<#list gcvList as gcv01>
+				<tr role="row" align="center" class="1" id="1_1" >
+					<td>${gcv01.id}</td>
+					<td align="left" style="padding-left:5em">
+						<span class="glyphicon glyphicon-plus btn-warning" style="padding:2px; font-size:12px;"  id="icon_1_1" aria-hidden="false" onclick="rowClicked(this)" ></span>&nbsp;
+						<span>${gcv01.name}</span>
+					</td>
+					<td><span>${gcv01.mobileName}</span></td>
+					<td>
+						<img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','1','is_hot',this)"/>
+					</td>
+					<td>
+						<img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','1','is_show',this)"/>
+					</td>
+					<td>
+						<input type="text" onchange="updateSort('goods_category','id','1','cat_group',this)"  onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')"  size="4" value="${gcv01.catGroup}" class="input-sm" />
+					</td>
+					<td>
+						<input type="text" onchange="updateSort('goods_category','id','1','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="${gcv01.sortOrder}" class="input-sm" />
+					</td>
+					<td>
+						<a class="btn btn-primary" href="商品分类-编辑.html"><i class="fa fa-pencil"></i></a>
+						<a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/1');"><i class="fa fa-trash-o"></i></a>
+					</td>
+				</tr>
+				<#list gcv01.children as gcv02>
+					<tr role="row" align="center" class="2" id="2_12" style="display:none">
+						<td>${gcv02.id}</td>
+						<td align="left" style="padding-left:10em">
+							<span class="glyphicon glyphicon-plus btn-warning" style="padding:2px; font-size:12px;"  id="icon_2_12" aria-hidden="false" onclick="rowClicked(this)" ></span>&nbsp;
+							<span>${gcv02.name}</span>
+						</td>
+						<td><span>${gcv02.mobileName}</span></td>
+						<td>
+							<img width="20" height="20" src="${ctx}/images/cancel.png" onclick="changeTableVal('goods_category','id','12','is_hot',this)"/>
+						</td>
+						<td>
+							<img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','12','is_show',this)"/>
+						</td>
+						<td>
+							<input type="text" onchange="updateSort('goods_category','id','12','cat_group',this)"  onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')"  size="4"value="${gcv02.catGroup}" class="input-sm" />
+						</td>
+						<td>
+							<input type="text" onchange="updateSort('goods_category','id','12','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="${gcv02.sortOrder}" class="input-sm" />
+						</td>
+						<td>
+							<a class="btn btn-primary" href="/index/Admin/Goods/addEditCategory/id/12"><i class="fa fa-pencil"></i></a>
+							<a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/12');"><i class="fa fa-trash-o"></i></a>
+						</td>
+					</tr>
+					<#list gcv02.children as gcv03>
+						<tr role="row" align="center" class="3" id="3_100" style="display:none">
+							<td>${gcv03.id}</td>
+							<td align="left" style="padding-left:15em">
+								<span>${gcv03.name}</span>
+							</td>
+							<td><span>${gcv03.mobileName}</span></td>
+							<td>
+								<img width="20" height="20" src="${ctx}/images/cancel.png" onclick="changeTableVal('goods_category','id','100','is_hot',this)"/>
+							</td>
+							<td>
+								<img width="20" height="20" src="${ctx}/images/yes.png" onclick="changeTableVal('goods_category','id','100','is_show',this)"/>
+							</td>
+							<td>
+								<input type="text" onchange="updateSort('goods_category','id','100','cat_group',this)"  onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')"  size="4"value="${gcv03.catGroup}" class="input-sm" />
+							</td>
+							<td>
+								<input type="text" onchange="updateSort('goods_category','id','100','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="${gcv03.sortOrder}" class="input-sm" />
+							</td>
+							<td>
+								<a class="btn btn-primary" href="/index/Admin/Goods/addEditCategory/id/100"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/100');"><i class="fa fa-trash-o"></i></a>
+							</td>
+						</tr>
+					</#list>
+				</#list>
+			</#list>
+			</tbody>
 	               </table></div></div>
 		               <div class="row">
 			               <div class="col-sm-5">

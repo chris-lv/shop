@@ -1,6 +1,7 @@
 package com.chris.manager.service;
 
 import com.chris.manager.pojo.GoodsCategory;
+import com.chris.manager.vo.GoodsCategoryVo;
 
 import java.util.List;
 
@@ -27,4 +28,17 @@ public interface GoodsCategoryService {
      * @return
      */
     List<GoodsCategory> selectCategoryByParentId(Short parentId);
+
+    /**
+     * 商品分类-新增分类-保存分类
+     * @param goodsCategory
+     * @return
+     */
+    int goodsCategorySave(GoodsCategory goodsCategory);
+
+    /**
+     * 商品分类-列表
+     * @return
+     */
+    List<GoodsCategoryVo> selectCategoryListForView();
 }

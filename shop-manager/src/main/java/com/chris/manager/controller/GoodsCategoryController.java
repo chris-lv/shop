@@ -1,5 +1,6 @@
 package com.chris.manager.controller;
 
+import com.chris.common.result.BaseResult;
 import com.chris.manager.pojo.GoodsCategory;
 import com.chris.manager.service.GoodsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class GoodsCategoryController {
      * @return
      */
     @RequestMapping("category/list")
-    public String categoryList() {
+    public String categoryList(Model model) {
+        model.addAttribute("gcvList",goodsCategoryService.selectCategoryListForView());
         return "goods/category/category-list";
     }
 
@@ -57,6 +59,18 @@ public class GoodsCategoryController {
     @ResponseBody
     public List<GoodsCategory> selectCategoryList(@PathVariable Short parentId) {
         return goodsCategoryService.selectCategoryByParentId(parentId);
+    }
+
+    /**
+     * 商品分类-新增分类-保存分类
+     * @param goodsCategory
+     * @return
+     */
+    @RequestMapping("category/save")
+    @ResponseBody
+    public BaseResult cateGorySave(GoodsCategory goodsCategory) {
+        int result = goodsCategoryService.goodsCategorySave(goodsCategory);
+        return result>0?BaseResult.success():BaseResult.error();
     }
 
 }
