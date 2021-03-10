@@ -4,6 +4,10 @@ server:
     context-path: /shop-manager
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shop?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
@@ -44,6 +48,7 @@ spring:
       number_format: #.##                   # 数字格式化
       boolean_format: true,false            # boolean格式化
       template_exception_handler: html_debug
+      classic_compatible: true
 
 mybatis:
   type-aliases-package: com.chris.manager.pojo

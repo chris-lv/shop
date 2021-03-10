@@ -68,9 +68,32 @@ public class GoodsCategoryController {
      */
     @RequestMapping("category/save")
     @ResponseBody
-    public BaseResult cateGorySave(GoodsCategory goodsCategory) {
+    public BaseResult categorySave(GoodsCategory goodsCategory) {
         int result = goodsCategoryService.goodsCategorySave(goodsCategory);
         return result>0?BaseResult.success():BaseResult.error();
     }
+
+//    /**
+//     * 跳转-商品分类-编辑页
+//     * @param id
+//     * @return
+//     */
+//    @RequestMapping("category/update/{id}")
+//    public String categoryUpdate(@PathVariable Short id, Model model) {
+//        GoodsCategory gc = goodsCategoryService.selectCategory(id);
+//        model.addAttribute("gc",gc);
+//        return "goods/category/category-add";
+//    }
+//
+//    /**
+//     * 商品分类-删除分类
+//     * @param id
+//     * @return
+//     */
+//    @RequestMapping("category/delete/{id}")
+//    public BaseResult categoryDelete(@PathVariable Short id) {
+//        int result = goodsCategoryService.goodsCategoryDelete(id);
+//        return result>0?BaseResult.success():BaseResult.error();
+//    }
 
 }

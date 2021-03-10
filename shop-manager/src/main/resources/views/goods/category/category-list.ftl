@@ -158,8 +158,8 @@
 						<input type="text" onchange="updateSort('goods_category','id','1','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="${gcv01.sortOrder}" class="input-sm" />
 					</td>
 					<td>
-						<a class="btn btn-primary" href="商品分类-编辑.html"><i class="fa fa-pencil"></i></a>
-						<a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/1');"><i class="fa fa-trash-o"></i></a>
+						<a class="btn btn-primary" href="${ctx}/goods/category/update"><i class="fa fa-pencil"></i></a>
+						<a class="btn btn-danger" href="${ctx}/goods/category/delete"><i class="fa fa-trash-o"></i></a>
 					</td>
 				</tr>
 				<#list gcv01.children as gcv02>
@@ -183,8 +183,8 @@
 							<input type="text" onchange="updateSort('goods_category','id','12','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="${gcv02.sortOrder}" class="input-sm" />
 						</td>
 						<td>
-							<a class="btn btn-primary" href="/index/Admin/Goods/addEditCategory/id/12"><i class="fa fa-pencil"></i></a>
-							<a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/12');"><i class="fa fa-trash-o"></i></a>
+							<a class="btn btn-primary" href="${ctx}/goods/category/update"><i class="fa fa-pencil"></i></a>
+							<a class="btn btn-danger" href="${ctx}/goods/category/delete"><i class="fa fa-trash-o"></i></a>
 						</td>
 					</tr>
 					<#list gcv02.children as gcv03>
@@ -207,8 +207,8 @@
 								<input type="text" onchange="updateSort('goods_category','id','100','sort_order',this)"   onkeyup="this.value=this.value.replace(/[^\d]/g,'')" onpaste="this.value=this.value.replace(/[^\d]/g,'')" size="4" value="${gcv03.sortOrder}" class="input-sm" />
 							</td>
 							<td>
-								<a class="btn btn-primary" href="/index/Admin/Goods/addEditCategory/id/100"><i class="fa fa-pencil"></i></a>
-								<a class="btn btn-danger" href="javascript:del_fun('/index/Admin/Goods/delGoodsCategory/id/100');"><i class="fa fa-trash-o"></i></a>
+								<a class="btn btn-primary" href="${ctx}/goods/category/update"><i class="fa fa-pencil"></i></a>
+								<a class="btn btn-danger" href="${ctx}/goods/category/delete"><i class="fa fa-trash-o"></i></a>
 							</td>
 						</tr>
 					</#list>
