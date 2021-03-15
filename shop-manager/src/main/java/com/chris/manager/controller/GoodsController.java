@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("goods")
-public class GoodsCategoryController {
+public class GoodsController {
 
     @Autowired
     private GoodsCategoryService goodsCategoryService;
@@ -71,6 +71,24 @@ public class GoodsCategoryController {
     public BaseResult categorySave(GoodsCategory goodsCategory) {
         int result = goodsCategoryService.goodsCategorySave(goodsCategory);
         return result>0?BaseResult.success():BaseResult.error();
+    }
+
+    /**
+     * 商品-列表-页面跳转
+     * @return
+     */
+    @RequestMapping("list")
+    public String goodsList(){
+        return "goods/goods-list";
+    }
+
+    /**
+     * 商品-新增-页面跳转
+     * @return
+     */
+    @RequestMapping("add")
+    public String goodsAdd(){
+        return "goods/goods-add";
     }
 
 //    /**
