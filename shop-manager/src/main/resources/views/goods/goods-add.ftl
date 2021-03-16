@@ -8,6 +8,11 @@
     <script type="text/javascript" src="${ctx}/js/fileinput.js"></script>
     <!-- 对中文的支持 -->
     <script type="text/javascript" src="${ctx}/js/fileinput_locale_zh.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="${ctx}/plugins/Ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${ctx}/plugins/Ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${ctx}/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+
     <script type="text/javascript">
         function delfunc(obj) {
             layer.confirm('确认删除？', {
@@ -123,19 +128,19 @@
 	 * 在线编辑器相 关配置 js 
 	 *  参考 地址 http://fex.baidu.com/ueditor/
 	 */
-    window.UEDITOR_Admin_URL = "../${ctx}/plugins/Ueditor/";
-    var URL_upload = "/index/Admin/Ueditor/imageUp/savepath/goods";
-    var URL_fileUp = "/index/Admin/Ueditor/fileUp/savepath/article";
-    var URL_scrawlUp = "/index/Admin/Ueditor/scrawlUp/savepath/article";
-    var URL_getRemoteImage = "/index/Admin/Ueditor/getRemoteImage/savepath/article";
-    var URL_imageManager = "/index/Admin/Ueditor/imageManager/savepath/article";
-    var URL_imageUp = "/index/Admin/Ueditor/imageUp/savepath/article";
-    var URL_getMovie = "/index/Admin/Ueditor/getMovie/savepath/article";
+    window.UEDITOR_Admin_URL = "../${ctx}/plugins/ueditor/";
+    var URL_upload = "/index/Admin/ueditor/imageUp/savepath/goods";
+    var URL_fileUp = "/index/Admin/ueditor/fileUp/savepath/article";
+    var URL_scrawlUp = "/index/Admin/ueditor/scrawlUp/savepath/article";
+    var URL_getRemoteImage = "/index/Admin/ueditor/getRemoteImage/savepath/article";
+    var URL_imageManager = "/index/Admin/ueditor/imageManager/savepath/article";
+    var URL_imageUp = "/index/Admin/ueditor/imageUp/savepath/article";
+    var URL_getMovie = "/index/Admin/ueditor/getMovie/savepath/article";
     var URL_home = "";
 </script>
-<script type="text/javascript" charset="utf-8" src="../${ctx}/plugins/Ueditor/ueditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="../${ctx}/plugins/Ueditor/ueditor.all.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="../${ctx}/plugins/Ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" charset="utf-8" src="../${ctx}/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../${ctx}/plugins/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="../${ctx}/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
 
     var editor;
@@ -201,10 +206,10 @@
 <div class="wrapper">
     <div class="breadcrumbs" id="breadcrumbs">
         <ol class="breadcrumb">
-            <li><a href="javascript:void();"><i class="fa fa-home"></i>&nbsp;&nbsp;后台首页</a></li>
+            <li><a href="javascript:void(0);"><i class="fa fa-home"></i>&nbsp;&nbsp;后台首页</a></li>
 
-            <li><a href="javascript:void();">商品管理</a></li>
-            <li><a href="javascript:void();">添加修改商品</a></li>
+            <li><a href="javascript:void(0);">商品管理</a></li>
+            <li><a href="javascript:void(0);">添加修改商品</a></li>
         </ol>
     </div>
 
@@ -226,7 +231,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_tongyong" data-toggle="tab">通用信息</a></li>
                         <!-- <li><a href="#tab_goods_desc" data-toggle="tab">描述信息</a></li>-->
-                        <li><a href="#tab_goods_images" data-toggle="tab">商品相册</a></li>
+                        <li><a href="#tab_goods_images" data-toggle="tab" onclick="checkHasGoods();">商品相册</a></li>
                         <li><a href="#tab_goods_spec" data-toggle="tab">商品模型</a></li>
                         <li><a href="#tab_goods_shipping" data-toggle="tab">商品物流</a></li>
                     </ul>
@@ -242,7 +247,7 @@
                                     <tr>
                                         <td>商品名称:</td>
                                         <td>
-                                            <input type="text" value="" name="goods_name" class="form-control"
+                                            <input type="text" value="" name="goodsName" class="form-control"
                                                    style="width:550px;"/>
                                             <span id="err_goods_name" style="color:#F00; display:none;"></span>
                                         </td>
@@ -250,7 +255,7 @@
                                     <tr>
                                         <td>商品简介:</td>
                                         <td>
-                                            <textarea rows="3" cols="80" name="goods_remark"></textarea>
+                                            <textarea rows="3" cols="80" name="goodsRemark"></textarea>
                                             <span id="err_goods_remark" style="color:#F00; display:none;"></span>
 
                                         </td>
@@ -258,7 +263,7 @@
                                     <tr>
                                         <td>商品货号</td>
                                         <td>
-                                            <input type="text" value="" name="goods_sn" class="form-control"
+                                            <input type="text" value="" name="goodsSn" class="form-control"
                                                    style="width:350px;"/>
                                             <span id="err_goods_sn" style="color:#F00; display:none;"></span>
                                         </td>
@@ -283,114 +288,58 @@
                                         <td>商品分类:</td>
                                         <td>
                                             <div class="col-xs-3">
+                                                <input type="hidden" name="catId" id="catId" value="0">
                                                 <select name="cat_id" id="cat_id"
-                                                        onchange="get_category(this.value,'cat_id_2','0');"
+                                                        onchange="getCategory(this.value,'cat_id_2','0','catId');"
                                                         class="form-control" style="width:250px;margin-left:-15px;">
                                                     <option value="0">请选择商品分类</option>
-                                                    <option value="1">
-                                                        手机 、 数码 、 通信
-                                                    </option>
-                                                    <option value="2">
-                                                        家用电器
-                                                    </option>
-                                                    <option value="3">
-                                                        电脑、办公
-                                                    </option>
-                                                    <option value="4">
-                                                        家居、家具、家装、厨具
-                                                    </option>
-                                                    <option value="5">
-                                                        男装、女装、童装、内衣
-                                                    </option>
-                                                    <option value="6">
-                                                        个人化妆
-                                                    </option>
-                                                    <option value="7">
-                                                        鞋、箱包、珠宝、手表
-                                                    </option>
-                                                    <option value="8">
-                                                        运动户外
-                                                    </option>
-                                                    <option value="9">
-                                                        汽车用品
-                                                    </option>
-                                                    <option value="10">
-                                                        母婴用品、儿童玩具
-                                                    </option>
-                                                    <option value="11">
-                                                        图书、音像、电子书
-                                                    </option>
+                                                    <#list gcList as gc>
+                                                        <option value="${gc.id}">${gc.name}</option>
+                                                    </#list>
                                                 </select>
                                             </div>
                                             <div class="col-xs-3">
                                                 <select name="cat_id_2" id="cat_id_2"
-                                                        onchange="get_category(this.value,'cat_id_3','0');"
+                                                        onchange="getCategory(this.value,'cat_id_3','1','catId');"
                                                         class="form-control" style="width:250px;margin-left:-15px;">
                                                     <option value="0">请选择商品分类</option>
                                                 </select>
                                             </div>
                                             <div class="col-xs-3">
-                                                <select name="cat_id_3" id="cat_id_3" class="form-control"
-                                                        style="width:250px;margin-left:-15px;">
+                                                <select name="cat_id_3" id="cat_id_3"
+                                                        onchange="setHiddenValue(this.value,'catId');"
+                                                        class="form-control" style="width:250px;margin-left:-15px;">
                                                     <option value="0">请选择商品分类</option>
                                                 </select>
                                             </div>
-                                            <span id="err_cat_id" style="color:#F00; display:none;"></span>
+                                            <span id="err_cat_id" style="color:#ff0000; display:none;"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>扩展分类:</td>
                                         <td>
                                             <div class="col-xs-3">
+                                                <input type="hidden" name="extendCatId" id="extendCatId" value="0">
                                                 <select name="extend_cat_id" id="extend_cat_id"
-                                                        onchange="get_category(this.value,'extend_cat_id_2','0');"
+                                                        onchange="getCategory(this.value,'extend_cat_id_2','0');"
                                                         class="form-control" style="width:250px;margin-left:-15px;">
                                                     <option value="0">请选择商品分类</option>
-                                                    <option value="1">
-                                                        手机 、 数码 、 通信
-                                                    </option>
-                                                    <option value="2">
-                                                        家用电器
-                                                    </option>
-                                                    <option value="3">
-                                                        电脑、办公
-                                                    </option>
-                                                    <option value="4">
-                                                        家居、家具、家装、厨具
-                                                    </option>
-                                                    <option value="5">
-                                                        男装、女装、童装、内衣
-                                                    </option>
-                                                    <option value="6">
-                                                        个人化妆
-                                                    </option>
-                                                    <option value="7">
-                                                        鞋、箱包、珠宝、手表
-                                                    </option>
-                                                    <option value="8">
-                                                        运动户外
-                                                    </option>
-                                                    <option value="9">
-                                                        汽车用品
-                                                    </option>
-                                                    <option value="10">
-                                                        母婴用品、儿童玩具
-                                                    </option>
-                                                    <option value="11">
-                                                        图书、音像、电子书
-                                                    </option>
+                                                    <#list gcList as gc>
+                                                        <option value="${gc.id}">${gc.name}</option>
+                                                    </#list>
                                                 </select>
                                             </div>
                                             <div class="col-xs-3">
                                                 <select name="extend_cat_id_2" id="extend_cat_id_2"
-                                                        onchange="get_category(this.value,'extend_cat_id_3','0');"
+                                                        onchange="getCategory(this.value,'extend_cat_id_3','0');"
                                                         class="form-control" style="width:250px;margin-left:-15px;">
                                                     <option value="0">请选择商品分类</option>
                                                 </select>
                                             </div>
                                             <div class="col-xs-3">
-                                                <select name="extend_cat_id_3" id="extend_cat_id_3" class="form-control"
-                                                        style="width:250px;margin-left:-15px;">
+                                                <select name="extend_cat_id_3" id="extend_cat_id_3"
+                                                        onchange="setHiddenValue(this.value,'extendCatId');"
+                                                        class="form-control" style="width:250px;margin-left:-15px;">
                                                     <option value="0">请选择商品分类</option>
                                                 </select>
                                             </div>
@@ -422,1057 +371,19 @@
                                     <tr>
                                         <td>商品品牌:</td>
                                         <td>
-                                            <select name="brand_id" id="brand_id" class="form-control"
+                                            <select name="brandId" id="brand_id" class="form-control"
                                                     style="width:250px;">
                                                 <option value="">所有品牌</option>
-                                                <option value="224">
-                                                    -- 361°
-                                                </option>
-                                                <option value="80">
-                                                    -- 倩碧/CLINIQUE
-                                                </option>
-                                                <option value="194">
-                                                    -- 宏碁/acer
-                                                </option>
-                                                <option value="27">
-                                                    -- 怡达/yida
-                                                </option>
-                                                <option value="310">
-                                                    -- 斐利比/Philippi
-                                                </option>
-                                                <option value="118">
-                                                    -- 榄菊
-                                                </option>
-                                                <option value="258">
-                                                    -- 缪缪/MIU MIU
-                                                </option>
-                                                <option value="280">
-                                                    -- 蔻驰/COACH
-                                                </option>
-                                                <option value="214">
-                                                    A -- A21
-                                                </option>
-                                                <option value="266">
-                                                    A -- Amii
-                                                </option>
-                                                <option value="308">
-                                                    A -- 奥迪双钻/AULDEY
-                                                </option>
-                                                <option value="64">
-                                                    A -- 安佳/Anchor
-                                                </option>
-                                                <option value="135">
-                                                    A -- 安佳/Anchor
-                                                </option>
-                                                <option value="207">
-                                                    A -- 安踏/ANTA ( 男装、女装、童装、内衣 )
-                                                </option>
-                                                <option value="231">
-                                                    A -- 安踏/ANTA ( 运动户外 )
-                                                </option>
-                                                <option value="237">
-                                                    A -- 昂立/Onlly
-                                                </option>
-                                                <option value="345">
-                                                    A -- 澳佳宝/BLACKMORES
-                                                </option>
-                                                <option value="155">
-                                                    A -- 澳西奴
-                                                </option>
-                                                <option value="309">
-                                                    A -- 澳贝/auby
-                                                </option>
-                                                <option value="263">
-                                                    A -- 爱华仕/Oiwas
-                                                </option>
-                                                <option value="328">
-                                                    A -- 爱安德/AND
-                                                </option>
-                                                <option value="327">
-                                                    A -- 爱科来/arkray
-                                                </option>
-                                                <option value="73">
-                                                    A -- 艾美/Emmi
-                                                </option>
-                                                <option value="41">
-                                                    A -- 阿华田/Ovaltine
-                                                </option>
-                                                <option value="21">
-                                                    A -- 阿尔卑斯/Alpenliebe
-                                                </option>
-                                                <option value="268">
-                                                    A -- 阿札/A-ZA
-                                                </option>
-                                                <option value="264">
-                                                    A -- 阿玛尼/EMPORIO ARMANI ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="286">
-                                                    A -- 阿玛尼/EMPORIO ARMANI ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="201">
-                                                    A -- 阿迪达斯/adidas ( 男装、女装、童装、内衣 )
-                                                </option>
-                                                <option value="221">
-                                                    A -- 阿迪达斯/adidas ( 运动户外 )
-                                                </option>
-                                                <option value="289">
-                                                    B -- BUREI
-                                                </option>
-                                                <option value="167">
-                                                    B -- 倍轻松/bero
-                                                </option>
-                                                <option value="315">
-                                                    B -- 兵兵
-                                                </option>
-                                                <option value="171">
-                                                    B -- 北欧欧慕/nathome
-                                                </option>
-                                                <option value="275">
-                                                    B -- 变形金刚/Transformers
-                                                </option>
-                                                <option value="208">
-                                                    B -- 宝娜斯
-                                                </option>
-                                                <option value="336">
-                                                    B -- 宝氏/Post
-                                                </option>
-                                                <option value="257">
-                                                    B -- 宝缇嘉/Bottega Veneta
-                                                </option>
-                                                <option value="301">
-                                                    B -- 宝视达
-                                                </option>
-                                                <option value="274">
-                                                    B -- 巴宝莉/Burberry
-                                                </option>
-                                                <option value="233">
-                                                    B -- 彪马/Puma
-                                                </option>
-                                                <option value="83">
-                                                    B -- 泊美/PUREMILD
-                                                </option>
-                                                <option value="25">
-                                                    B -- 波力/PO-LI
-                                                </option>
-                                                <option value="202">
-                                                    B -- 波司登/Bosideng
-                                                </option>
-                                                <option value="267">
-                                                    B -- 波斯丹顿/Bostanten
-                                                </option>
-                                                <option value="33">
-                                                    B -- 百味林
-                                                </option>
-                                                <option value="79">
-                                                    B -- 碧欧泉/BIOTHERM
-                                                </option>
-                                                <option value="243">
-                                                    B -- 碧生源/Besunyen
-                                                </option>
-                                                <option value="296">
-                                                    B -- 秉信
-                                                </option>
-                                                <option value="96">
-                                                    B -- 贝因美/BEINGMATE
-                                                </option>
-                                                <option value="70">
-                                                    B -- 贝尔/BEIER
-                                                </option>
-                                                <option value="265">
-                                                    B -- 贝尔/BEIER ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="177">
-                                                    B -- 贝尔斯顿/BESTDAY
-                                                </option>
-                                                <option value="311">
-                                                    B -- 邦迪/BAND-AID
-                                                </option>
-                                                <option value="246">
-                                                    C -- 初元
-                                                </option>
-                                                <option value="210">
-                                                    C -- 初语/TOYOUTH
-                                                </option>
-                                                <option value="218">
-                                                    C -- 川崎/kawasaki
-                                                </option>
-                                                <option value="22">
-                                                    C -- 春光/chun guang
-                                                </option>
-                                                <option value="173">
-                                                    C -- 春笑
-                                                </option>
-                                                <option value="42">
-                                                    C -- 晨光/MG
-                                                </option>
-                                                <option value="298">
-                                                    C -- 灿坤/EUPA
-                                                </option>
-                                                <option value="121">
-                                                    C -- 超能
-                                                </option>
-                                                <option value="270">
-                                                    D -- DOODOO
-                                                </option>
-                                                <option value="12">
-                                                    D -- 东信/EASTCOM
-                                                </option>
-                                                <option value="85">
-                                                    D -- 丹姿/DANZ
-                                                </option>
-                                                <option value="276">
-                                                    D -- 哆啦A梦/Doraemon
-                                                </option>
-                                                <option value="31">
-                                                    D -- 多力多滋/Doritos
-                                                </option>
-                                                <option value="92">
-                                                    D -- 多美滋/Dumex
-                                                </option>
-                                                <option value="68">
-                                                    D -- 多美鲜/Suki
-                                                </option>
-                                                <option value="142">
-                                                    D -- 多美鲜/Suki
-                                                </option>
-                                                <option value="76">
-                                                    D -- 大宝/Dabao
-                                                </option>
-                                                <option value="295">
-                                                    D -- 大富翁/Uncle Wang
-                                                </option>
-                                                <option value="338">
-                                                    D -- 大王/GOO.N
-                                                </option>
-                                                <option value="176">
-                                                    D -- 德国博朗/BRAUN
-                                                </option>
-                                                <option value="52">
-                                                    D -- 德运/Devondale
-                                                </option>
-                                                <option value="66">
-                                                    D -- 德运/Devondale
-                                                </option>
-                                                <option value="137">
-                                                    D -- 德运/Devondale
-                                                </option>
-                                                <option value="337">
-                                                    D -- 德运/Devondale
-                                                </option>
-                                                <option value="102">
-                                                    D -- 德运/Devondale ( 母婴用品、儿童玩具 )
-                                                </option>
-                                                <option value="183">
-                                                    D -- 戴尔/DELL
-                                                </option>
-                                                <option value="288">
-                                                    D -- 杜嘉班纳/DG
-                                                </option>
-                                                <option value="112">
-                                                    D -- 滴露/Dettol
-                                                </option>
-                                                <option value="222">
-                                                    D -- 迪士尼/Disney ( 运动户外 )
-                                                </option>
-                                                <option value="282">
-                                                    D -- 迪士尼/Disney ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="115">
-                                                    D -- 雕牌
-                                                </option>
-                                                <option value="44">
-                                                    D -- 顶好/Soyfresh
-                                                </option>
-                                                <option value="56">
-                                                    D -- 顶好/Soyfresh
-                                                </option>
-                                                <option value="254">
-                                                    E -- ELLE ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="272">
-                                                    E -- ELLE ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="18">
-                                                    E -- E人E本
-                                                </option>
-                                                <option value="297">
-                                                    F -- 福库/Cuckoo
-                                                </option>
-                                                <option value="81">
-                                                    F -- 芳珂/Fancl
-                                                </option>
-                                                <option value="54">
-                                                    F -- 风行
-                                                </option>
-                                                <option value="175">
-                                                    F -- 飞利浦/PHILIPS ( 家用电器 )
-                                                </option>
-                                                <option value="7">
-                                                    F -- 飞利浦/PHILIPS ( 手机 、 数码 、 通信 )
-                                                </option>
-                                                <option value="278">
-                                                    G -- GUESS
-                                                </option>
-                                                <option value="129">
-                                                    G -- 光明
-                                                </option>
-                                                <option value="165">
-                                                    G -- 光明 ( 家用电器 )
-                                                </option>
-                                                <option value="256">
-                                                    G -- 古驰/Gucci
-                                                </option>
-                                                <option value="232">
-                                                    G -- 哥伦比亚/Columbia
-                                                </option>
-                                                <option value="252">
-                                                    G -- 广元堂
-                                                </option>
-                                                <option value="162">
-                                                    G -- 格致诚品
-                                                </option>
-                                                <option value="38">
-                                                    G -- 桂格/QUAKER
-                                                </option>
-                                                <option value="61">
-                                                    G -- 葛兰纳诺/GRANAROLO
-                                                </option>
-                                                <option value="334">
-                                                    G -- 钙尔奇/Caltrate
-                                                </option>
-                                                <option value="101">
-                                                    G -- 高培/GlodMax
-                                                </option>
-                                                <option value="10">
-                                                    H -- HTC
-                                                </option>
-                                                <option value="343">
-                                                    H -- 亨氏/Heinz
-                                                </option>
-                                                <option value="1">
-                                                    H -- 华为/HUAWEI
-                                                </option>
-                                                <option value="146">
-                                                    H -- 华乐/huale
-                                                </option>
-                                                <option value="37">
-                                                    H -- 华味亨
-                                                </option>
-                                                <option value="186">
-                                                    H -- 华硕/ASUS
-                                                </option>
-                                                <option value="340">
-                                                    H -- 和光堂/WaKODO
-                                                </option>
-                                                <option value="225">
-                                                    H -- 回力/Warrior
-                                                </option>
-                                                <option value="147">
-                                                    H -- 好伴侣/hao ban lv
-                                                </option>
-                                                <option value="248">
-                                                    H -- 好医生
-                                                </option>
-                                                <option value="238">
-                                                    H -- 恒寿堂/HENG SHOU TANG
-                                                </option>
-                                                <option value="182">
-                                                    H -- 惠普/hp
-                                                </option>
-                                                <option value="93">
-                                                    H -- 惠氏/Wyeth
-                                                </option>
-                                                <option value="19">
-                                                    H -- 海信/Hisense
-                                                </option>
-                                                <option value="143">
-                                                    H -- 海天下
-                                                </option>
-                                                <option value="14">
-                                                    H -- 海尔/Haier
-                                                </option>
-                                                <option value="314">
-                                                    H -- 海氏海诺/HAINUO
-                                                </option>
-                                                <option value="281">
-                                                    H -- 海鸥表/Sea-Gull
-                                                </option>
-                                                <option value="24">
-                                                    H -- 皇冠/Danisa
-                                                </option>
-                                                <option value="247">
-                                                    H -- 红桃K
-                                                </option>
-                                                <option value="331">
-                                                    H -- 花王/Merries
-                                                </option>
-                                                <option value="200">
-                                                    H -- 花花公子/PLAYBOY
-                                                </option>
-                                                <option value="131">
-                                                    H -- 鸿福堂/HUNG FOOK TONG
-                                                </option>
-                                                <option value="307">
-                                                    J -- 九阳/Joyoung
-                                                </option>
-                                                <option value="89">
-                                                    J -- 京润珍珠
-                                                </option>
-                                                <option value="91">
-                                                    J -- 娇兰/Guerlain
-                                                </option>
-                                                <option value="110">
-                                                    J -- 娇妍/JOLLY
-                                                </option>
-                                                <option value="126">
-                                                    J -- 洁霸/Attack
-                                                </option>
-                                                <option value="109">
-                                                    J -- 绝对宝贝/JUST BABY
-                                                </option>
-                                                <option value="84">
-                                                    J -- 近江蔓莎
-                                                </option>
-                                                <option value="189">
-                                                    J -- 金士顿/Kingston
-                                                </option>
-                                                <option value="321">
-                                                    J -- 金奥力
-                                                </option>
-                                                <option value="269">
-                                                    K -- 克路驰/CLUCI
-                                                </option>
-                                                <option value="174">
-                                                    K -- 凯仕乐/KASRROW
-                                                </option>
-                                                <option value="229">
-                                                    K -- 凯速
-                                                </option>
-                                                <option value="251">
-                                                    K -- 凯镛
-                                                </option>
-                                                <option value="226">
-                                                    K -- 匡威/Converse
-                                                </option>
-                                                <option value="39">
-                                                    K -- 卡夫/KRAFT
-                                                </option>
-                                                <option value="330">
-                                                    K -- 卡夫/KRAFT
-                                                </option>
-                                                <option value="74">
-                                                    K -- 卡姿兰/CARSLAN
-                                                </option>
-                                                <option value="108">
-                                                    K -- 卡瑞特兹/Karivita
-                                                </option>
-                                                <option value="341">
-                                                    K -- 可瑞康/Karicare
-                                                </option>
-                                                <option value="104">
-                                                    K -- 可瑞康/Karicare ( 母婴用品、儿童玩具 )
-                                                </option>
-                                                <option value="138">
-                                                    K -- 坎诺拉/Canola
-                                                </option>
-                                                <option value="179">
-                                                    K -- 康夫/kangfu
-                                                </option>
-                                                <option value="150">
-                                                    K -- 康尔馨/Canasin
-                                                </option>
-                                                <option value="32">
-                                                    K -- 康师傅/Master Kong
-                                                </option>
-                                                <option value="319">
-                                                    K -- 康扉/KANGFEI
-                                                </option>
-                                                <option value="67">
-                                                    K -- 康维多/Primavita
-                                                </option>
-                                                <option value="103">
-                                                    K -- 康维多/Primavita ( 母婴用品、儿童玩具 )
-                                                </option>
-                                                <option value="116">
-                                                    K -- 开米/Kami
-                                                </option>
-                                                <option value="300">
-                                                    K -- 开馨宝/KAI XIN BAO
-                                                </option>
-                                                <option value="191">
-                                                    K -- 开馨宝/KAI XIN BAO ( 电脑、办公 )
-                                                </option>
-                                                <option value="141">
-                                                    K -- 科尔沁/KERCHIN
-                                                </option>
-                                                <option value="180">
-                                                    K -- 酷力
-                                                </option>
-                                                <option value="333">
-                                                    L -- LG
-                                                </option>
-                                                <option value="30">
-                                                    L -- 乐事/Lay s
-                                                </option>
-                                                <option value="294">
-                                                    L -- 乐比比/LEBIBI
-                                                </option>
-                                                <option value="140">
-                                                    L -- 乐芝牛/The Laughing Cow
-                                                </option>
-                                                <option value="163">
-                                                    L -- 六朝家居/luc life
-                                                </option>
-                                                <option value="145">
-                                                    L -- 兰皇
-                                                </option>
-                                                <option value="82">
-                                                    L -- 兰芝/LANEIGE
-                                                </option>
-                                                <option value="78">
-                                                    L -- 兰蔻/LANCOME
-                                                </option>
-                                                <option value="71">
-                                                    L -- 兰诺斯/Lemnos
-                                                </option>
-                                                <option value="299">
-                                                    L -- 利仁/LIVEN
-                                                </option>
-                                                <option value="271">
-                                                    L -- 拉菲斯汀/Lafestin
-                                                </option>
-                                                <option value="46">
-                                                    L -- 李子园
-                                                </option>
-                                                <option value="285">
-                                                    L -- 李维斯/Levi s
-                                                </option>
-                                                <option value="157">
-                                                    L -- 来赉
-                                                </option>
-                                                <option value="98">
-                                                    L -- 林贝儿/IMPERIAL.XO
-                                                </option>
-                                                <option value="273">
-                                                    L -- 浪琴/Longines
-                                                </option>
-                                                <option value="36">
-                                                    L -- 立丰/lifefun
-                                                </option>
-                                                <option value="119">
-                                                    L -- 立白/Liby
-                                                </option>
-                                                <option value="124">
-                                                    L -- 绿伞/EVER GREEN
-                                                </option>
-                                                <option value="34">
-                                                    L -- 绿帝/green king
-                                                </option>
-                                                <option value="75">
-                                                    L -- 老中医
-                                                </option>
-                                                <option value="193">
-                                                    L -- 联想/Lenovo
-                                                </option>
-                                                <option value="154">
-                                                    L -- 莱薇/Lavie
-                                                </option>
-                                                <option value="123">
-                                                    L -- 蓝月亮
-                                                </option>
-                                                <option value="158">
-                                                    L -- 路途乐
-                                                </option>
-                                                <option value="90">
-                                                    L -- 隆力奇/LONGLIQI
-                                                </option>
-                                                <option value="318">
-                                                    L -- 零听
-                                                </option>
-                                                <option value="153">
-                                                    L -- 零听 ( 家居、家具、家装、厨具 )
-                                                </option>
-                                                <option value="181">
-                                                    L -- 雷瓦/RIWA
-                                                </option>
-                                                <option value="227">
-                                                    L -- 骆驼/CAMEL
-                                                </option>
-                                                <option value="234">
-                                                    L -- 骆驼牌
-                                                </option>
-                                                <option value="159">
-                                                    L -- 龙之涵
-                                                </option>
-                                                <option value="325">
-                                                    L -- 龙贝儿/Loboor
-                                                </option>
-                                                <option value="113">
-                                                    M -- 妙管家/MAGIC AMAH
-                                                </option>
-                                                <option value="2">
-                                                    M -- 摩托罗拉/MOTOROLA
-                                                </option>
-                                                <option value="106">
-                                                    M -- 明一/wissun
-                                                </option>
-                                                <option value="199">
-                                                    M -- 明基/BenQ
-                                                </option>
-                                                <option value="287">
-                                                    M -- 梅花/Titoni
-                                                </option>
-                                                <option value="213">
-                                                    M -- 梦娜/MengNa
-                                                </option>
-                                                <option value="152">
-                                                    M -- 梦特娇/MONTAGUT ( 家居、家具、家装、厨具 )
-                                                </option>
-                                                <option value="259">
-                                                    M -- 梦特娇/MONTAGUT ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="28">
-                                                    M -- 母亲
-                                                </option>
-                                                <option value="178">
-                                                    M -- 美克斯/MKS
-                                                </option>
-                                                <option value="344">
-                                                    M -- 谜尚/MISSHA
-                                                </option>
-                                                <option value="326">
-                                                    M -- 迈克大夫/microlife
-                                                </option>
-                                                <option value="230">
-                                                    N -- NIKKO
-                                                </option>
-                                                <option value="139">
-                                                    N -- NPG
-                                                </option>
-                                                <option value="303">
-                                                    N -- 内野/UCHINO
-                                                </option>
-                                                <option value="62">
-                                                    N -- 南阳
-                                                </option>
-                                                <option value="107">
-                                                    N -- 牛奶客/Neolac
-                                                </option>
-                                                <option value="13">
-                                                    N -- 纽曼/Newsmy
-                                                </option>
-                                                <option value="250">
-                                                    N -- 纽曼思/Nemans
-                                                </option>
-                                                <option value="63">
-                                                    N -- 纽瑞滋/Nouriz
-                                                </option>
-                                                <option value="100">
-                                                    N -- 纽瑞滋/Nouriz ( 母婴用品、儿童玩具 )
-                                                </option>
-                                                <option value="220">
-                                                    N -- 耐克/NIKE
-                                                </option>
-                                                <option value="149">
-                                                    N -- 诺伊曼/noyoke
-                                                </option>
-                                                <option value="346">
-                                                    N -- 诺优能/Nutrilon
-                                                </option>
-                                                <option value="5">
-                                                    N -- 诺基亚/NOKIA ( 手机 、 数码 、 通信 )
-                                                </option>
-                                                <option value="198">
-                                                    N -- 诺基亚/NOKIA ( 电脑、办公 )
-                                                </option>
-                                                <option value="209">
-                                                    O -- ONEBUYE
-                                                </option>
-                                                <option value="8">
-                                                    O -- OPPO
-                                                </option>
-                                                <option value="215">
-                                                    O -- OopsCiah
-                                                </option>
-                                                <option value="322">
-                                                    O -- 欧姆龙/Omron
-                                                </option>
-                                                <option value="51">
-                                                    O -- 欧德堡/OLDENBURGER
-                                                </option>
-                                                <option value="65">
-                                                    O -- 欧德堡/OLDENBURGER
-                                                </option>
-                                                <option value="136">
-                                                    O -- 欧德堡/OLDENBURGER
-                                                </option>
-                                                <option value="88">
-                                                    O -- 欧莱雅/L OREAL
-                                                </option>
-                                                <option value="29">
-                                                    P -- 品客/Pringles
-                                                </option>
-                                                <option value="49">
-                                                    P -- 帕斯卡/PASCUAL
-                                                </option>
-                                                <option value="60">
-                                                    P -- 帕斯卡/PASCUAL
-                                                </option>
-                                                <option value="151">
-                                                    P -- 普拉达/PULADA
-                                                </option>
-                                                <option value="23">
-                                                    P -- 潘高寿
-                                                </option>
-                                                <option value="236">
-                                                    P -- 潘高寿
-                                                </option>
-                                                <option value="9">
-                                                    P -- 苹果/Apple ( 手机 、 数码 、 通信 )
-                                                </option>
-                                                <option value="184">
-                                                    P -- 苹果/Apple ( 电脑、办公 )
-                                                </option>
-                                                <option value="260">
-                                                    P -- 苹果/Apple ( 鞋、箱包、珠宝、手表 )
-                                                </option>
-                                                <option value="317">
-                                                    Q -- 强生/Johnson
-                                                </option>
-                                                <option value="188">
-                                                    Q -- 清华同方
-                                                </option>
-                                                <option value="206">
-                                                    Q -- 秋水伊人
-                                                </option>
-                                                <option value="55">
-                                                    Q -- 雀巢/Nestle
-                                                </option>
-                                                <option value="339">
-                                                    Q -- 雀巢/Nestle
-                                                </option>
-                                                <option value="160">
-                                                    R -- 日光生活
-                                                </option>
-                                                <option value="166">
-                                                    R -- 日立/HITACHI
-                                                </option>
-                                                <option value="255">
-                                                    R -- 瑞士军刀/SWISSGEAR
-                                                </option>
-                                                <option value="335">
-                                                    R -- 瑞士莲/Lindt
-                                                </option>
-                                                <option value="72">
-                                                    R -- 瑞慕/swiss mooh
-                                                </option>
-                                                <option value="216">
-                                                    R -- 若美/nomi
-                                                </option>
-                                                <option value="219">
-                                                    R -- 锐步/Reebok
-                                                </option>
-                                                <option value="169">
-                                                    S -- SKG
-                                                </option>
-                                                <option value="99">
-                                                    S -- 三元
-                                                </option>
-                                                <option value="240">
-                                                    S -- 三叶
-                                                </option>
-                                                <option value="57">
-                                                    S -- 三得利/SUNTORY
-                                                </option>
-                                                <option value="15">
-                                                    S -- 三星/SAMSUNG
-                                                </option>
-                                                <option value="196">
-                                                    S -- 三星/SAMSUNG ( 电脑、办公 )
-                                                </option>
-                                                <option value="249">
-                                                    S -- 三金
-                                                </option>
-                                                <option value="35">
-                                                    S -- 上好佳/Oishi
-                                                </option>
-                                                <option value="130">
-                                                    S -- 双汇/shineway
-                                                </option>
-                                                <option value="172">
-                                                    S -- 双鸟/twinbird
-                                                </option>
-                                                <option value="332">
-                                                    S -- 善存/Centrum
-                                                </option>
-                                                <option value="134">
-                                                    S -- 思念/SYNEAR
-                                                </option>
-                                                <option value="122">
-                                                    S -- 扇牌
-                                                </option>
-                                                <option value="277">
-                                                    S -- 施华洛世奇/Swarovski
-                                                </option>
-                                                <option value="217">
-                                                    S -- 森马/Semir
-                                                </option>
-                                                <option value="164">
-                                                    S -- 沙宣/VS
-                                                </option>
-                                                <option value="69">
-                                                    S -- 深蓝健康/DEEP BLUE HEALTH
-                                                </option>
-                                                <option value="120">
-                                                    S -- 狮王/LION
-                                                </option>
-                                                <option value="48">
-                                                    S -- 生机谷/LIVING PLANET
-                                                </option>
-                                                <option value="59">
-                                                    S -- 生机谷/LIVING PLANET
-                                                </option>
-                                                <option value="4">
-                                                    S -- 索尼/SONY ( 手机 、 数码 、 通信 )
-                                                </option>
-                                                <option value="197">
-                                                    S -- 索尼/SONY ( 电脑、办公 )
-                                                </option>
-                                                <option value="262">
-                                                    S -- 赛琳/CELINE
-                                                </option>
-                                                <option value="11">
-                                                    S -- 首信/capital
-                                                </option>
-                                                <option value="6">
-                                                    T -- TCL
-                                                </option>
-                                                <option value="187">
-                                                    T -- ThinkPad
-                                                </option>
-                                                <option value="203">
-                                                    T -- 唐狮/Tonlion
-                                                </option>
-                                                <option value="161">
-                                                    T -- 图强/TU QIANF TOWEL
-                                                </option>
-                                                <option value="283">
-                                                    T -- 天梭/Tissot
-                                                </option>
-                                                <option value="284">
-                                                    T -- 天王表/TIAN WANG
-                                                </option>
-                                                <option value="53">
-                                                    T -- 天香
-                                                </option>
-                                                <option value="228">
-                                                    T -- 探路者/Toread
-                                                </option>
-                                                <option value="242">
-                                                    T -- 泰尔
-                                                </option>
-                                                <option value="223">
-                                                    T -- 特步/Xtep
-                                                </option>
-                                                <option value="105">
-                                                    T -- 特福芬/Topfer
-                                                </option>
-                                                <option value="47">
-                                                    T -- 田园/COUNTRY GOODNESS
-                                                </option>
-                                                <option value="58">
-                                                    T -- 田园/COUNTRY GOODNESS
-                                                </option>
-                                                <option value="292">
-                                                    T -- 贴贴
-                                                </option>
-                                                <option value="253">
-                                                    U -- UTU
-                                                </option>
-                                                <option value="16">
-                                                    W -- 万利达/malata
-                                                </option>
-                                                <option value="279">
-                                                    W -- 万宝龙/Montblanc
-                                                </option>
-                                                <option value="156">
-                                                    W -- 吾家元素
-                                                </option>
-                                                <option value="132">
-                                                    W -- 味千拉面/AJISEN RAMEN
-                                                </option>
-                                                <option value="114">
-                                                    W -- 威洁士/Walex
-                                                </option>
-                                                <option value="111">
-                                                    W -- 威露士/Walch
-                                                </option>
-                                                <option value="190">
-                                                    W -- 微星/MSI
-                                                </option>
-                                                <option value="185">
-                                                    W -- 微软/Microsoft
-                                                </option>
-                                                <option value="144">
-                                                    W -- 湾仔码头
-                                                </option>
-                                                <option value="40">
-                                                    W -- 维维
-                                                </option>
-                                                <option value="320">
-                                                    X -- 仙鹤牌
-                                                </option>
-                                                <option value="313">
-                                                    X -- 信乐/SINO
-                                                </option>
-                                                <option value="20">
-                                                    X -- 喜之郎/STRONG
-                                                </option>
-                                                <option value="50">
-                                                    X -- 喜乐
-                                                </option>
-                                                <option value="342">
-                                                    X -- 夏依/summer eve
-                                                </option>
-                                                <option value="127">
-                                                    X -- 小林
-                                                </option>
-                                                <option value="306">
-                                                    X -- 小熊/Bear
-                                                </option>
-                                                <option value="349">
-                                                    X -- 小米
-                                                </option>
-                                                <option value="3">
-                                                    X -- 小辣椒
-                                                </option>
-                                                <option value="128">
-                                                    X -- 新雅/sunya
-                                                </option>
-                                                <option value="329">
-                                                    X -- 星巴克/STARBUCKS
-                                                </option>
-                                                <option value="17">
-                                                    X -- 现代/HYUNDAI
-                                                </option>
-                                                <option value="77">
-                                                    X -- 相宜本草/INOHERB
-                                                </option>
-                                                <option value="195">
-                                                    X -- 西部数据/WD
-                                                </option>
-                                                <option value="316">
-                                                    X -- 西门子/SIEMENS
-                                                </option>
-                                                <option value="261">
-                                                    X -- 香奈儿/CHANEL
-                                                </option>
-                                                <option value="302">
-                                                    X -- 香百年/Carori
-                                                </option>
-                                                <option value="291">
-                                                    Y -- 一生一信/Infeel.Me
-                                                </option>
-                                                <option value="245">
-                                                    Y -- 云南白药/YunnanBaiyao
-                                                </option>
-                                                <option value="312">
-                                                    Y -- 云南白药/YunnanBaiyao
-                                                </option>
-                                                <option value="43">
-                                                    Y -- 伊利
-                                                </option>
-                                                <option value="94">
-                                                    Y -- 伊利 ( 母婴用品、儿童玩具 )
-                                                </option>
-                                                <option value="293">
-                                                    Y -- 伊莱克斯/Electrolux
-                                                </option>
-                                                <option value="168">
-                                                    Y -- 优冠
-                                                </option>
-                                                <option value="192">
-                                                    Y -- 优派/ViewSonic
-                                                </option>
-                                                <option value="239">
-                                                    Y -- 养生堂
-                                                </option>
-                                                <option value="148">
-                                                    Y -- 养鹅人
-                                                </option>
-                                                <option value="290">
-                                                    Y -- 友邦
-                                                </option>
-                                                <option value="212">
-                                                    Y -- 幽迷/Youmi
-                                                </option>
-                                                <option value="241">
-                                                    Y -- 御生堂
-                                                </option>
-                                                <option value="304">
-                                                    Y -- 悠嘻猴
-                                                </option>
-                                                <option value="170">
-                                                    Y -- 易简/Yijan
-                                                </option>
-                                                <option value="244">
-                                                    Y -- 益力健
-                                                </option>
-                                                <option value="97">
-                                                    Y -- 益力健 ( 母婴用品、儿童玩具 )
-                                                </option>
-                                                <option value="125">
-                                                    Y -- 裕华
-                                                </option>
-                                                <option value="86">
-                                                    Y -- 郁美净
-                                                </option>
-                                                <option value="45">
-                                                    Y -- 银鹭
-                                                </option>
-                                                <option value="211">
-                                                    Y -- 雅可希/YAKEXI
-                                                </option>
-                                                <option value="324">
-                                                    Y -- 雅培/Abbott
-                                                </option>
-                                                <option value="95">
-                                                    Y -- 雅士利/YASHILY
-                                                </option>
-                                                <option value="204">
-                                                    Y -- 雅鹿
-                                                </option>
-                                                <option value="133">
-                                                    Y -- 雨润/Yurun
-                                                </option>
-                                                <option value="323">
-                                                    Y -- 鱼跃/yuyue
-                                                </option>
-                                                <option value="305">
-                                                    Z -- 卓朗/ZoomLand
-                                                </option>
-                                                <option value="26">
-                                                    Z -- 张二嘎
-                                                </option>
-                                                <option value="87">
-                                                    Z -- 昭贵
-                                                </option>
-                                                <option value="117">
-                                                    Z -- 正章
-                                                </option>
-                                                <option value="205">
-                                                    Z -- 真维斯/Jeanswest
-                                                </option>
-                                                <option value="235">
-                                                    Z -- 自由兵/FREE SOLDIER
-                                                </option>
+                                                <#list brandList as brand>
+                                                    <option value="${brand.id}">${brand.name}</option>
+                                                </#list>
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>供应商:</td>
                                         <td>
-                                            <select name="suppliers_id" id="suppliers_id" class="form-control"
+                                            <select name="suppliersId" id="suppliers_id" class="form-control"
                                                     style="width:250px;">
                                                 <option value="0">不指定供应商属于本店商品</option>
                                             </select>
@@ -1481,7 +392,7 @@
                                     <tr>
                                         <td>本店售价:</td>
                                         <td>
-                                            <input type="text" value="" name="shop_price" class="form-control"
+                                            <input type="text" value="" name="shopPrice" class="form-control"
                                                    style="width:150px;"
                                                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
                                                    onpaste="this.value=this.value.replace(/[^\d.]/g,'')"/>
@@ -1491,7 +402,7 @@
                                     <tr>
                                         <td>市场价:</td>
                                         <td>
-                                            <input type="text" value="" name="market_price" class="form-control"
+                                            <input type="text" value="" name="marketPrice" class="form-control"
                                                    style="width:150px;"
                                                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
                                                    onpaste="this.value=this.value.replace(/[^\d.]/g,'')"/>
@@ -1501,7 +412,7 @@
                                     <tr>
                                         <td>成本价:</td>
                                         <td>
-                                            <input type="text" value="" name="cost_price" class="form-control"
+                                            <input type="text" value="" name="costPrice" class="form-control"
                                                    style="width:150px;"
                                                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
                                                    onpaste="this.value=this.value.replace(/[^\d.]/g,'')"/>
@@ -1521,9 +432,10 @@
                                     <tr>
                                         <td>上传商品图片:</td>
                                         <td>
-                                            <input type="text" name="originalImg" id="originalImg"/>
+                                            <input type="hidden" name="originalImg" id="originalImg"/>
                                             <form enctype="multipart/form-data">
-                                                <input id="file-product" class="file" name="file" type="file" multiple data-min-file-count="1">
+                                                <input id="file-product" class="file" name="file" type="file" multiple
+                                                       data-min-file-count="1">
                                             </form>
                                         </td>
                                     </tr>
@@ -1540,7 +452,7 @@
                                     <tr>
                                         <td>是否包邮:</td>
                                         <td>
-                                            是:<input type="radio" value="1" name="is_free_shipping"/>
+                                            是:<input type="radio" value="1" name="isFreeShipping"/>
                                             否:<input type="radio" checked="checked" value="0" name="is_free_shipping"/>
                                         </td>
                                     </tr>
@@ -1548,7 +460,7 @@
                                         <td>库存数量:</td>
                                         <td>
                                             <input type="text" value="1" class="form-control" style="width:150px;"
-                                                   name="store_count"
+                                                   name="storeCount"
                                                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
                                                    onpaste="this.value=this.value.replace(/[^\d.]/g,'')"/>
                                             <span id="err_store_count" style="color:#F00; display:none;"></span>
@@ -1558,7 +470,7 @@
                                         <td>赠送积分:</td>
                                         <td>
                                             <input type="text" class="form-control" style="width:150px;" value=""
-                                                   name="give_integral"
+                                                   name="giveIntegral"
                                                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
                                                    onpaste="this.value=this.value.replace(/[^\d.]/g,'')"/>
                                             <span id="err_give_integral" style="color:#F00; display:none;"></span>
@@ -1568,7 +480,7 @@
                                         <td>兑换积分:</td>
                                         <td>
                                             <input type="text" class="form-control" style="width:150px;" value=""
-                                                   name="exchange_integral"
+                                                   name="exchangeIntegral"
                                                    onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"
                                                    onpaste="this.value=this.value.replace(/[^\d.]/g,'')"/>
                                             <span id="err_exchange_integral" style="color:#F00; display:none;"></span>
@@ -1596,8 +508,7 @@
                                     <tr>
                                         <td>商品详情描述:</td>
                                         <td width="85%">
-                                            <textarea rows="6" cols="80" class="span12 ckeditor" id="goods_content"
-                                                      name="goods_content" title=""></textarea>
+                                            <textarea rows="6" cols="80" class="span12 ckeditor" id="goods_content" name="goodsContent" title=""></textarea>
                                             <span id="err_goods_content" style="color:#F00; display:none;"></span>
                                         </td>
                                     </tr>
@@ -1612,17 +523,11 @@
                                     <tbody>
                                     <tr>
                                         <td>
-
-                                            <div class="goods_xc"
-                                                 style="width:100px; text-align:center; margin: 5px; display:inline-block;">
-                                                <input type="hidden" name="goods_images[]" value=""/>
-                                                <a href="javascript:void(0);"
-                                                   onclick="GetUploadify(10,'','goods','call_back2');"><img
-                                                            src="../${ctx}/images/add-button.jpg" width="100"
-                                                            height="100"/></a>
-                                                <br/>
-                                                <a href="javascript:void(0)">&nbsp;&nbsp;</a>
-                                            </div>
+                                            <form enctype="multipart/form-data">
+                                                <!--<input type="text" id="fileGroupName" name="fileGroupName"/><br>-->
+                                                <input id="file-goods-images" class="file" name="file" type="file" multiple
+                                                       data-min-file-count="1">
+                                            </form>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -1770,9 +675,9 @@
                             <!-- 商品物流-->
                         </div>
                         <div class="pull-right">
-                            <input type="hidden" name="goods_id" value="">
+                            <input type="hidden" name="goodsId" id="goodsId" value="">
                             <button class="btn btn-primary"
-                                    onclick="ajax_submit_form('addEditGoodsForm','/index/Admin/Goods/addEditGoods/is_ajax/1');"
+                                    onclick="ajax_submit_form('addEditGoodsForm','${ctx}/goods/save','${ctx}/goods/add','${ctx}/goods/list','goodsId');"
                                     title="" data-toggle="tooltip" type="button" data-original-title="保存">保存
                             </button>
                         </div>
@@ -1807,6 +712,15 @@
         } else {
             $('input[type=checkbox]').removeAttr('checked');
         }
+    }
+
+    /**
+     * 设置商品分类的隐藏域的值
+     * @param value
+     * @param hiddenId
+     */
+    function setHiddenValue(value, hiddenId) {
+        $("#" + hiddenId).val(value);
     }
 
     /*
@@ -1969,6 +883,149 @@
         console.log('File uploaded triggered');
     });
 
+
+    //---------------------------商品相册begin-------------------
+    /**
+     * 初始设置
+     *    language指定语言
+     *    uploadUrl指定文件上传的后台地址
+     *    allowedPreviewTypes允许上传文件的类型
+     */
+    $('#file-goods-images').fileinput({
+        language: 'zh',
+        uploadUrl: '${ctx}/goods/images/save',
+        allowedPreviewTypes: ['image', 'html', 'text', 'video', 'audio', 'flash'],
+        //文件上传插件提交额外参数
+        uploadExtraData: function () {
+            var goodsId = {"goodsId": $("#goodsId").val()};
+            return goodsId;
+        }
+    });
+    /**
+     * 上传文件失败后 调用方法（回调函数）
+     */
+    $('#file-goods-images').on('fileuploaderror', function (event, data, previewId, index) {
+        var form = data.form,
+            files = data.files,
+            extra = data.extra,
+            response = data.response,
+            reader = data.reader;
+        console.log(data);
+        console.log('File upload error');
+    });
+    /**
+     * 文件错误 比如文件类型错误 调用方法（回调函数）
+     */
+    $('#file-goods-images').on('fileerror', function (event, data) {
+        console.log(data.id);
+        console.log(data.index);
+        console.log(data.file);
+        console.log(data.reader);
+        console.log(data.files);
+    });
+    /**
+     * 文件上传成功后 调用方法（回调函数）
+     */
+    $('#file-goods-images').on('fileuploaded', function (event, data, previewId, index) {
+        var form = data.form,
+            files = data.files,
+            extra = data.extra,
+            response = data.response,
+            reader = data.reader;
+        console.log('File uploaded triggered');
+    });
+
+    //---------------------------商品相册end------------------------
+
+    /**
+     * 检查是否已保存商品通用信息
+     */
+    function checkHasGoods() {
+        if (!$("#goodsId").val()){
+            layer.msg("请先保存商品【通用信息】");
+            $("#file-goods-images").attr("disabled", true);
+        }else {
+            $("#file-goods-images").attr("disabled", false);
+        }
+    }
+
 </script>
+<!--以下是在线编辑器 代码 -->
+<script type="text/javascript">
+    /*
+    * 在线编辑器相 关配置 js
+    *  参考 地址 http://fex.baidu.com/ueditor/
+    */
+    window.UEDITOR_Admin_URL = "${ctx}/plugins/Ueditor/";
+    var URL_upload = "/index/Admin/Ueditor/imageUp/savepath/goods";
+    var URL_fileUp = "/index/Admin/Ueditor/fileUp/savepath/article";
+    var URL_scrawlUp = "/index/Admin/Ueditor/scrawlUp/savepath/article";
+    var URL_getRemoteImage = "/index/Admin/Ueditor/getRemoteImage/savepath/article";
+    var URL_imageManager = "/index/Admin/Ueditor/imageManager/savepath/article";
+    var URL_imageUp = "/index/Admin/Ueditor/imageUp/savepath/article";
+    var URL_getMovie = "/index/Admin/Ueditor/getMovie/savepath/article";
+    var URL_home = "";
+</script>
+<script type="text/javascript">
+
+    var editor;
+    $(function () {
+        //具体参数配置在  editor_config.js  中
+        var options = {
+            zIndex: 999,
+            initialFrameWidth: "95%", //初化宽度
+            initialFrameHeight: 400, //初化高度
+            focus: false, //初始化时，是否让编辑器获得焦点true或false
+            maximumWords: 99999,
+            removeFormatAttributes: 'class,style,lang,width,height,align,hspace,valign', //允许的最大字符数 'fullscreen',
+            pasteplain: false, //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+            autoHeightEnabled: true
+            /*   autotypeset: {
+                   mergeEmptyline: true,        //合并空行
+                   removeClass: true,           //去掉冗余的class
+                   removeEmptyline: false,      //去掉空行
+                   textAlign: "left",           //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
+                   imageBlockLine: 'center',    //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
+                   pasteFilter: false,          //根据规则过滤没事粘贴进来的内容
+                   clearFontSize: false,        //去掉所有的内嵌字号，使用编辑器默认的字号
+                   clearFontFamily: false,      //去掉所有的内嵌字体，使用编辑器默认的字体
+                   removeEmptyNode: false,      //去掉空节点
+                                                //可以去掉的标签
+                   removeTagNames: {"font": 1},
+                   indent: false,               // 行首缩进
+                   indentValue: '0em'           //行首缩进的大小
+               }*/,
+            toolbars: [
+                ['fullscreen', 'source', '|', 'undo', 'redo',
+                    '|', 'bold', 'italic', 'underline', 'fontborder',
+                    'strikethrough', 'superscript', 'subscript',
+                    'removeformat', 'formatmatch', 'autotypeset',
+                    'blockquote', 'pasteplain', '|', 'forecolor',
+                    'backcolor', 'insertorderedlist',
+                    'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                    'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                    'customstyle', 'paragraph', 'fontfamily', 'fontsize',
+                    '|', 'directionalityltr', 'directionalityrtl',
+                    'indent', '|', 'justifyleft', 'justifycenter',
+                    'justifyright', 'justifyjustify', '|', 'touppercase',
+                    'tolowercase', '|', 'link', 'unlink', 'anchor', '|',
+                    'imagenone', 'imageleft', 'imageright', 'imagecenter',
+                    '|', 'insertimage', 'emotion', 'insertvideo',
+                    'attachment', 'map', 'gmap', 'insertframe',
+                    'insertcode', 'webapp', 'pagebreak', 'template',
+                    'background', '|', 'horizontal', 'date', 'time',
+                    'spechars', 'wordimage', '|',
+                    'inserttable', 'deletetable',
+                    'insertparagraphbeforetable', 'insertrow', 'deleterow',
+                    'insertcol', 'deletecol', 'mergecells', 'mergeright',
+                    'mergedown', 'splittocells', 'splittorows',
+                    'splittocols', '|', 'print', 'preview', 'searchreplace']
+            ]
+        };
+        editor = new UE.ui.Editor(options);
+        editor.render("goods_content");  //  指定 textarea 的  id 为 goods_content
+    });
+</script>
+<!--以上是在线编辑器 代码  end-->
 </body>
 </html>

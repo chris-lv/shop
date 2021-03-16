@@ -1,15 +1,24 @@
 package com.chris.manager.controller;
 
 import com.chris.common.result.BaseResult;
+import com.chris.common.result.FileResult;
+import com.chris.manager.pojo.Brand;
+import com.chris.manager.pojo.Goods;
 import com.chris.manager.pojo.GoodsCategory;
-import com.chris.manager.service.GoodsCategoryService;
+import com.chris.manager.pojo.GoodsImages;
+import com.chris.manager.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -27,6 +36,14 @@ public class GoodsController {
 
     @Autowired
     private GoodsCategoryService goodsCategoryService;
+    @Autowired
+    private BrandService brandService;
+    @Autowired
+    private GoodsService goodsService;
+    @Autowired
+    private GoodsImagesService goodsImagesService;
+    @Autowired
+    private UploadService uploadService;
 
     /**
      * 跳转 商品分类-列表页
@@ -87,8 +104,50 @@ public class GoodsController {
      * @return
      */
     @RequestMapping("add")
-    public String goodsAdd(){
+    public String goodsAdd(Model model){
+        //查询顶级分类
+        List<GoodsCategory> gcList = goodsCategoryService.selectCategoryTopList();
+        model.addAttribute("gcList",gcList);
+        List<Brand> brandList = brandService.selectBrandList();
+        model.addAttribute("brandList",brandList);
         return "goods/goods-add";
+    }
+
+    /**
+     * 商品新增-保存
+     * @param goods
+     * @return
+     */
+    @RequestMapping("save")
+    @ResponseBody
+    public BaseResult saveGoods(Goods goods) {
+        return goodsService.saveGoods(goods);
+    }
+
+    /**
+     * 商品相册-保存
+     * @param file
+     * @param goodsId
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("images/save")
+    @ResponseBody
+    public BaseResult saveImages(MultipartFile file, Integer goodsId) throws IOException {
+        String filename = file.getOriginalFilename();
+        String date = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDateTime.now());
+        filename = date + System.currentTimeMillis() + filename.substring(filename.lastIndexOf("."));
+        FileResult result = uploadService.upload(file.getInputStream(), filename);
+        //判断是否上传成功 fileUrl非空表名上传成功
+        if(!StringUtils.isEmpty(result.getFileUrl())) {
+            GoodsImages goodsImages = new GoodsImages();
+            goodsImages.setImageUrl(result.getFileUrl());
+            goodsImages.setGoodsId(goodsId);
+            BaseResult baseResult = goodsImagesService.saveGoodsImages(goodsImages);
+            return baseResult;
+        } else {
+            return BaseResult.error();
+        }
     }
 
 //    /**

@@ -236,27 +236,76 @@ function GetRTime(end_time){
 	   if(s >= 0)	
 	   return d + '天' + h + '小时' + m + '分' +s+'秒';
    }
-   
-   
+
+
 /**
  * 获取多级联动的商品分类
+ * id:当前选择框的值
+ * next：下级选择框显示的内容
+ * select_id:level
  */
-function get_category(id,next,select_id){
-    var url = '/index?m=Home&c=api&a=get_category&parent_id='+ id;
+function getCategory(id, next, select_id, hidden_id) {
+    var url = getProjectName() + '/goods/category/' + id;
+    // 用户重新选择顶级分类时，重置下级分类为：请选择商品分类，且清空下级分类信息
+    var htmlStr = "<option value='0'>请选择商品分类</option>";
+    if (0 == id) {
+        $("#" + next).html(htmlStr);
+        //分割字符串处理第三级分类
+        var nextIds = next.split('_');
+        var nextIdNum = '';
+        if (nextIds[2] == 'id') {
+            nextIdNum = parseInt(nextIds[3]);
+            if (nextIdNum == 2) {
+                nextIdNum++;
+                // cat_id_2
+                $("#" + nextIds[0] + "_" + nextIds[1] + "_" + nextIds[2] + "_" +
+                    nextIdNum).html(htmlStr);
+            }
+        } else {
+            nextIdNum = parseInt(nextIds[2]);
+            if (nextIdNum == 2) {
+                nextIdNum++;
+                // cat_id_2
+                $("#" + nextIds[0] + "_" + nextIds[1] + "_" + nextIdNum).html(htmlStr);
+            }
+        }
+        //重置分类隐藏域的值为0
+        $("#" + hidden_id).val(0);
+        return;
+    }
     $.ajax({
-        type : "GET",
-        url  : url,
-        error: function(request) {
-            alert("服务器繁忙, 请联系管理员!4");
-            return;
+        type: "GET",
+        url: url,
+        error: function (request) {
+            layer.alert("获取子分类失败！");
         },
-        success: function(v) {
-			v = "<option value='0'>请选择商品分类</option>" + v;
-            $('#'+next).empty().html(v);
-			(select_id > 0) && $('#'+next).val(select_id);//默认选中
+        success: function (result) {
+            if (result.length >= 0) {
+                for (i = 0; i < result.length; i++) {
+                    htmlStr += "<option value='" + result[i].id + "'>" + result[i].name + "</option>"
+                }
+                $("#" + next).html(htmlStr);
+            } else {
+                layer.alert("获取子分类失败！");
+            }
         }
     });
 }
+
+/**
+ * 获取项目路径
+ */
+function getProjectName() {
+    // 获取当前网址 比如：http://localhost:8888/shop-manager-web/product/category/edit/1
+    var curWwwPath = window.document.location.href;
+    // 获取主机地址之后的目录 比如：/shop-manager-web/product/category/edit/1
+    var pathName = window.document.location.pathname;
+    var pos = curWwwPath.indexOf(pathName);
+    // 获取主机地址 比如：http://localhost:8080
+    var localhostPath = curWwwPath.substring(0, pos);
+    // 获取带"/"的项目名 比如：/shop-manager-web
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    return projectName; }
 
 // 读取 cookie
 function getCookie(c_name)
