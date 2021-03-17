@@ -20,4 +20,13 @@ public interface GoodsService {
      * @return
      */
     BaseResult saveGoods(Goods goods);
+
+    /**
+     * 商品列表-分页查询
+     * @param goods
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    BaseResult selectGoodsListByPage(Goods goods, Integer pageNum, Integer pageSize);
 }

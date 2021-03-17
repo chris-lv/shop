@@ -52,6 +52,17 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
         return goodsCategoryMapper.insertSelective(goodsCategory);
     }
 
+
+    @Override
+    public int goodsCategoryDelete(Short id) {
+        return goodsCategoryMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public GoodsCategory selectCategory(Short id) {
+        return goodsCategoryMapper.selectByPrimaryKey(id);
+    }
+
     @Override
     public List<GoodsCategoryVo> selectCategoryListForView() {
 //        //创建查询条件
@@ -119,18 +130,10 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
         return gcvList01;
     }
 
-//    @Override
-//    public GoodsCategory selectCategory(Short id) {
-//        return goodsCategoryMapper.selectByPrimaryKey(id);
-//    }
-//
-//    @Override
-//    public int goodsCategoryUpdate(GoodsCategory goodsCategory) {
-//        return goodsCategoryMapper.updateByPrimaryKeySelective(goodsCategory);
-//    }
-//
-//    @Override
-//    public int goodsCategoryDelete(Short id) {
-//        return goodsCategoryMapper.deleteByPrimaryKey(id);
-//    }
+    @Override
+    public List<GoodsCategory> selectCategoryList() {
+        return goodsCategoryMapper.selectByExample(new GoodsCategoryExample());
+    }
+
+
 }

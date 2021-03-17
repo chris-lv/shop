@@ -7,6 +7,7 @@ import com.chris.manager.pojo.Goods;
 import com.chris.manager.pojo.GoodsCategory;
 import com.chris.manager.pojo.GoodsImages;
 import com.chris.manager.service.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,6 +69,40 @@ public class GoodsController {
     }
 
     /**
+     * 跳转-商品分类-编辑页
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/category/update/{id}")
+    public String goodsUpdate(@PathVariable Short id,Model model) {
+        // 根据传入id查询要修该的分类原信息
+        GoodsCategory goodsCategory = goodsCategoryService.selectCategory(id);
+        model.addAttribute("goodsCategory",goodsCategory);
+
+        List<GoodsCategory> gcList = goodsCategoryService.selectCategoryTopList();
+        model.addAttribute("gcList",gcList);
+        return "goods/category/category-add";
+    }
+
+    /**
+     * 商品分类-编辑
+     * @param goodsCategory
+     * @return
+     */
+    @RequestMapping("category/update")
+    @ResponseBody
+    public BaseResult updateCategory(GoodsCategory goodsCategory) {
+        GoodsCategory selectCategory = goodsCategoryService.selectCategory(goodsCategory.getId());
+        if (selectCategory != null) {
+            BeanUtils.copyProperties(goodsCategory,selectCategory);
+            return BaseResult.success();
+        } else {
+            return BaseResult.error();
+        }
+    }
+
+    /**
      * 商品分类-新增分类-级联查询
      * @param parentId
      * @return
@@ -95,7 +130,11 @@ public class GoodsController {
      * @return
      */
     @RequestMapping("list")
-    public String goodsList(){
+    public String goodsList(Model model){
+        // 返回所有商品分类
+        model.addAttribute("gcList",goodsCategoryService.selectCategoryList());
+        // 返回所有商品品牌
+        model.addAttribute("brandList",brandService.selectBrandList());
         return "goods/goods-list";
     }
 
@@ -125,6 +164,18 @@ public class GoodsController {
     }
 
     /**
+     * 商品分类-删除分类
+     * @param id
+     * @return
+     */
+    @RequestMapping("category/delete/{id}")
+    @ResponseBody
+    public BaseResult categoryDelete(@PathVariable Short id) {
+        int result = goodsCategoryService.goodsCategoryDelete(id);
+        return result>0?BaseResult.success():BaseResult.error();
+    }
+
+    /**
      * 商品相册-保存
      * @param file
      * @param goodsId
@@ -150,27 +201,10 @@ public class GoodsController {
         }
     }
 
-//    /**
-//     * 跳转-商品分类-编辑页
-//     * @param id
-//     * @return
-//     */
-//    @RequestMapping("category/update/{id}")
-//    public String categoryUpdate(@PathVariable Short id, Model model) {
-//        GoodsCategory gc = goodsCategoryService.selectCategory(id);
-//        model.addAttribute("gc",gc);
-//        return "goods/category/category-add";
-//    }
-//
-//    /**
-//     * 商品分类-删除分类
-//     * @param id
-//     * @return
-//     */
-//    @RequestMapping("category/delete/{id}")
-//    public BaseResult categoryDelete(@PathVariable Short id) {
-//        int result = goodsCategoryService.goodsCategoryDelete(id);
-//        return result>0?BaseResult.success():BaseResult.error();
-//    }
+    @RequestMapping("listForPage")
+    @ResponseBody
+    public BaseResult selectGoodsListByPage(Goods goods,Integer pageNum,Integer pageSize) {
+        return goodsService.selectGoodsListByPage(goods,pageNum,pageSize);
+    }
 
 }

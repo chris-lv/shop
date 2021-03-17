@@ -37,29 +37,24 @@ public interface GoodsCategoryService {
     int goodsCategorySave(GoodsCategory goodsCategory);
 
     /**
+     * 商品分类-删除
+     * @param id
+     * @return
+     */
+    int goodsCategoryDelete(Short id);
+
+    GoodsCategory selectCategory(Short id);
+
+    /**
      * 商品分类-列表
      * @return
      */
     List<GoodsCategoryVo> selectCategoryListForView();
 
-//    /**
-//     * 商品分类-查询分类信息
-//     * @param id
-//     * @return
-//     */
-//    GoodsCategory selectCategory(Short id);
-//
-//    /**
-//     * 商品分类-编辑
-//     * @param goodsCategory
-//     * @return
-//     */
-//    int goodsCategoryUpdate(GoodsCategory goodsCategory);
-//
-//    /**
-//     * 商品分类-删除
-//     * @param id
-//     * @return
-//     */
-//    int goodsCategoryDelete(Short id);
+    /**
+     * 商品分类-查询所有商品分类
+     * @return
+     */
+    List<GoodsCategory> selectCategoryList();
+
 }

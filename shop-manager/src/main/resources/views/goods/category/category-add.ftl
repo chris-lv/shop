@@ -122,12 +122,13 @@
                     <!-- /.box-header -->
                     <form action="/index/Admin/Goods/addEditCategory" method="post" class="form-horizontal"
                           id="category_form">
+                        <input type="hidden" name="id" id="goods_category_id" value="${goodsCategory.id}">
                         <div class="box-body">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">分类名称</label>
                                 <div class="col-sm-6">
                                     <input type="text" placeholder="名称" class="form-control large" name="name"
-                                           value="手机 、 数码 、 通信">
+                                           value="${goodsCategory.name}">
                                     <span class="help-inline" style="color:#F00; display:none;" id="err_name"></span>
                                 </div>
                             </div>
@@ -135,16 +136,16 @@
                                 <label class="control-label col-sm-2">手机分类名称</label>
                                 <div class="col-sm-6">
                                     <input type="text" placeholder="手机分类名称" class="form-control large" name="mobileName"
-                                           value="数码产品">
+                                           value="${goodsCategory.mobileName}">
                                     <span class="help-inline" style="color:#F00; display:none;"
                                           id="err_mobile_name"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label0 class="control-label col-sm-2">上级分类</label0>
+                                <label class="control-label col-sm-2">上级分类</label>
 
-                                <input type="text" name="parentId" id="parentId" value="0">
-                                <input type="text" name="level" id="level" value="1">
+                                <input type="hidden" name="parentId" id="parentId" value="${goodsCategory.parentId}">
+                                <input type="hidden" name="level" id="level" value="${goodsCategory.level}">
 
                                 <div class="col-sm-3">
                                     <select name="parent_id_1" id="parent_id_1"
@@ -181,45 +182,25 @@
                                     <select name="catGroup" id="cat_group" class="form-control">
                                         <option value="0">0</option>
                                         <option value='1'>1</option>
-                                        "
                                         <option value='2'>2</option>
-                                        "
                                         <option value='3'>3</option>
-                                        "
                                         <option value='4'>4</option>
-                                        "
                                         <option value='5'>5</option>
-                                        "
                                         <option value='6'>6</option>
-                                        "
                                         <option value='7'>7</option>
-                                        "
                                         <option value='8'>8</option>
-                                        "
                                         <option value='9'>9</option>
-                                        "
                                         <option value='10'>10</option>
-                                        "
                                         <option value='11'>11</option>
-                                        "
                                         <option value='12'>12</option>
-                                        "
                                         <option value='13'>13</option>
-                                        "
                                         <option value='14'>14</option>
-                                        "
                                         <option value='15'>15</option>
-                                        "
                                         <option value='16'>16</option>
-                                        "
                                         <option value='17'>17</option>
-                                        "
                                         <option value='18'>18</option>
-                                        "
                                         <option value='19'>19</option>
-                                        "
                                         <option value='20'>20</option>
-                                        "
                                     </select>
                                 </div>
                             </div>
@@ -235,7 +216,7 @@
                                 <label class="control-label col-sm-2">显示排序</label>
                                 <div class="col-sm-1">
                                     <input type="text" placeholder="50" class="form-control large" name="sortOrder"
-                                           value="50"/>
+                                           value="${goodsCategory.sortOrder}"/>
                                     <span class="help-inline" style="color:#F00; display:none;"
                                           id="err_sort_order"></span>
                                 </div>
@@ -244,7 +225,7 @@
                                 <label class="control-label col-sm-2">分佣比例</label>
                                 <div class="col-sm-1">
                                     <input type="text" placeholder="50" class="form-control large" name="commissionRate"
-                                           id="commission_rate" value="0"
+                                           id="commission_rate" value="${goodsCategory.commissionRate}"
                                            onpaste="this.value=this.value.replace(/[^\d.]/g,'')"
                                            onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
                                 </div>
@@ -329,6 +310,25 @@
      *保存分类
      */
     function ajaxSubmitForm() {
+        if ($("#goods_category_id").val() != null) {
+            $.ajax({
+                url: "${ctx}/goods/category/update/",
+                type: "POST",
+                data: $("#category_form").serialize(),
+                dataType: "JSON",
+                success: function (result) {
+                    if (result == 200) {
+                        layer.confirm("修改成功")
+                        window.location.href = "${ctx}/goods/category/list";
+                    } else {
+                        layer.confirm("修改失败")
+                    }
+                },
+                error: function () {
+                    layer.alert("修改失败");
+                }
+            })
+        }
         $.ajax({
             url: "${ctx}/goods/category/save",
             type: "post",
